@@ -36,7 +36,7 @@ function GameScreen(){
         <div className="game-box-container">
             <div className="game-box">
                 <p>⏱️ Time: {secondsElapsed}s</p>
-                <Game secondsElapsed={secondsElapsed} startGame={startGame} endGame={endGame}/>
+                <Game startGame={startGame} endGame={endGame}/>
             </div>
         </div>
     );

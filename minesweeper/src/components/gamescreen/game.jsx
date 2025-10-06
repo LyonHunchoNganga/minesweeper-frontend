@@ -2,60 +2,59 @@ import React, { useState, useEffect } from 'react';
 import Board from './Board';
 import {useNavigate} from "react-router";
 
-const Game = ({secondsElapsed, startGame, endGame}) => {
+const Game = ({startGame, endGame}) => {
 
   const nav = useNavigate()
 
   const [grid, setGrid] = useState([]);
   const [gameOver, setGameOver] = useState(false);
-  const [mines, setMines] = useState(10);
-  const [rows, setRows] = useState(10);
-  const [cols, setCols] = useState(10);
+  const mines = 10;
+  const rows = 10;
+  const cols = 10;
   const [status, setStatus] = useState('');
   const [flagsPlaced, setFlagsPlaced] = useState(0);
 
   useEffect(() => {
-    initializeGame();
-  }, []);
-
-  const initializeGame = () => {
-    startGame()
-    const newGrid = [];
-    for (let i = 0; i < rows; i++) {
-      newGrid.push([]);
-      for (let j = 0; j < cols; j++) {
-        newGrid[i].push({
-          mine: false,
-          revealed: false,
-          adjacentMines: 0,
-          flagged: false,
-        });
-      }
-    }
-
-    let placedMines = 0;
-    while (placedMines < mines) {
-      const randomRow = Math.floor(Math.random() * rows);
-      const randomCol = Math.floor(Math.random() * cols);
-      if (!newGrid[randomRow][randomCol].mine) {
-        newGrid[randomRow][randomCol].mine = true;
-        placedMines++;
-      }
-    }
-
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        if (!newGrid[i][j].mine) {
-          newGrid[i][j].adjacentMines = countAdjacentMines(newGrid, i, j);
+    const initializeGame = () => {
+      startGame()
+      const newGrid = [];
+      for (let i = 0; i < rows; i++) {
+        newGrid.push([]);
+        for (let j = 0; j < cols; j++) {
+          newGrid[i].push({
+            mine: false,
+            revealed: false,
+            adjacentMines: 0,
+            flagged: false,
+          });
         }
       }
-    }
 
-    setGrid(newGrid);
-    setGameOver(false);
-    setStatus('');
-    setFlagsPlaced(0);
-  };
+      let placedMines = 0;
+      while (placedMines < mines) {
+        const randomRow = Math.floor(Math.random() * rows);
+        const randomCol = Math.floor(Math.random() * cols);
+        if (!newGrid[randomRow][randomCol].mine) {
+          newGrid[randomRow][randomCol].mine = true;
+          placedMines++;
+        }
+      }
+
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          if (!newGrid[i][j].mine) {
+            newGrid[i][j].adjacentMines = countAdjacentMines(newGrid, i, j);
+          }
+        }
+      }
+
+      setGrid(newGrid);
+      setGameOver(false);
+      setStatus('');
+      setFlagsPlaced(0);
+    };
+    initializeGame();
+  }, [startGame]);
 
   const countAdjacentMines = (grid, row, col) => {
     let count = 0;
