@@ -8,10 +8,10 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Save details to localStorage
+    
     localStorage.setItem('username', username);
     localStorage.setItem('password', password);
-    // Navigate to home
+    
     navigate('/');
   };
 

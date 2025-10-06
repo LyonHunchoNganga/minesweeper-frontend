@@ -1,7 +1,7 @@
 import React from 'react';
 import Cell from './cell';
 
-const Board = ({ grid, handleCellClick }) => {
+const Board = ({ grid, handleCellClick, handleRightClick }) => {
   return (
     <div className="board">
       {grid?.map((row, rowIndex) => (
@@ -11,6 +11,7 @@ const Board = ({ grid, handleCellClick }) => {
               key={colIndex}
               cell={cell}
               handleCellClick={handleCellClick}
+              handleRightClick={handleRightClick}
               row={rowIndex}
               col={colIndex}
             />

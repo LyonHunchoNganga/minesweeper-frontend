@@ -12,6 +12,7 @@ const Game = ({secondsElapsed, startGame, endGame}) => {
   const [rows, setRows] = useState(10);
   const [cols, setCols] = useState(10);
   const [status, setStatus] = useState('');
+  const [flagsPlaced, setFlagsPlaced] = useState(0);
 
   useEffect(() => {
     initializeGame();
@@ -27,6 +28,7 @@ const Game = ({secondsElapsed, startGame, endGame}) => {
           mine: false,
           revealed: false,
           adjacentMines: 0,
+          flagged: false,
         });
       }
     }
@@ -52,6 +54,7 @@ const Game = ({secondsElapsed, startGame, endGame}) => {
     setGrid(newGrid);
     setGameOver(false);
     setStatus('');
+    setFlagsPlaced(0);
   };
 
   const countAdjacentMines = (grid, row, col) => {
@@ -100,10 +103,23 @@ const Game = ({secondsElapsed, startGame, endGame}) => {
     }
   };
 
+  const handleRightClick = (row, col) => {
+    if (gameOver) return;
+
+    const newGrid = deepCopyGrid(grid);
+    if (!newGrid[row][col].revealed) {
+      newGrid[row][col].flagged = !newGrid[row][col].flagged;
+      setFlagsPlaced(prev => newGrid[row][col].flagged ? prev + 1 : prev - 1);
+    }
+    setGrid(newGrid);
+  };
+
   const handleCellClick = (row, col) => {
     if (gameOver) return;
 
     const newGrid = deepCopyGrid(grid);
+
+    if (newGrid[row][col].flagged) return;
 
     if (newGrid[row][col].mine) {
       newGrid[row][col].revealed = true;
@@ -129,8 +145,10 @@ const Game = ({secondsElapsed, startGame, endGame}) => {
     <div>
       <button onClick={initializeGame}>Restart Game</button>
       <button onClick={()=>{nav("/")}}>Exit Game</button>
-      <div style={{ margin: '10px 0', fontWeight: 'bold' }}>{status}</div>
-      <Board grid={grid} handleCellClick={handleCellClick} />
+      <div style={{ margin: '10px 0', fontWeight: 'bold' }}>
+        Mines: {mines - flagsPlaced} | {status}
+      </div>
+      <Board grid={grid} handleCellClick={handleCellClick} handleRightClick={handleRightClick} />
     </div>
   );
 };
